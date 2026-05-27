@@ -1,6 +1,8 @@
 import {useState, useEffect} from 'react';
 import './App.css';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 function App() {
 
   const [nombre, setNombre] = useState("");
@@ -20,7 +22,7 @@ function App() {
 
   const cargarDocentes = async () => {
     try {
-      const response = await fetch('http://localhost:3001/docentes');
+      const response = await fetch(`${API_URL}/docentes`);
       const data = await response.json();
       setRegistros(data);
     } catch (error) {
@@ -54,7 +56,7 @@ function App() {
     if (editIndex !== null) {
       try {
         const docente = registros[editIndex];
-        const response = await fetch(`http://localhost:3001/docentes/${docente.id}`, {
+        const response = await fetch(`${API_URL}/docentes/${docente.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -85,7 +87,7 @@ function App() {
 
     } else {
       try {
-        const response = await fetch('http://localhost:3001/docentes', {
+        const response = await fetch(`${API_URL}/docentes`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -109,7 +111,7 @@ function App() {
     const docente = registros[idx];
 
     try {
-      const response = await fetch(`http://localhost:3001/docentes/${docente.id}`, {
+      const response = await fetch(`${API_URL}/docentes/${docente.id}`, {
         method: 'DELETE',
       });
 

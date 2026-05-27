@@ -1,10 +1,9 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://projectuniversity-med-core.onrender.com';
 
 function App() {
-
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -23,9 +22,14 @@ function App() {
   const cargarDocentes = async () => {
     try {
       const response = await fetch(`${API_URL}/docentes`);
-      const data = await response.json();
-      setRegistros(data);
+      if (response.ok) {
+        const data = await response.json();
+        setRegistros(Array.isArray(data) ? data : []);
+      } else {
+        setRegistros([]);
+      }
     } catch (error) {
+      setRegistros([]);
       alert('Error al cargar los docentes');
     }
   };
@@ -84,7 +88,6 @@ function App() {
       } catch (error) {
         alert('Error de conexion al actualizar un docente');
       }
-
     } else {
       try {
         const response = await fetch(`${API_URL}/docentes`, {
@@ -144,8 +147,6 @@ function App() {
 
   return (
     <div style={{ padding: "1.5rem", fontFamily: "sans-serif" }}>
-
-      {/* FORMULARIO */}
       <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "1.5rem", marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "1.25rem", paddingBottom: "1rem", borderBottom: "1px solid #e5e7eb" }}>
           <h2 style={{ margin: 0, fontSize: "16px", fontWeight: 500 }}>
@@ -218,7 +219,6 @@ function App() {
         </form>
       </div>
 
-      {/* TABLA */}
       <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", paddingBottom: "1rem", borderBottom: "1px solid #e5e7eb" }}>
           <h2 style={{ margin: 0, fontSize: "16px", fontWeight: 500 }}>Docentes registrados</h2>
@@ -249,7 +249,7 @@ function App() {
                   <td style={{ padding: "10px 8px", color: "#6b7280", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{reg.correo}</td>
                   <td style={{ padding: "10px 8px", color: "#6b7280" }}>{reg.telefono}</td>
                   <td style={{ padding: "10px 8px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{reg.area_academica}</td>
-                  <td style={{ padding: "10px 8px" }}>
+                  <td>
                     <span style={{
                       fontSize: "11px", padding: "2px 8px", borderRadius: "8px",
                       background: reg.dedicacion === "Tiempo completo" ? "#f0fdf4" : reg.dedicacion === "Medio tiempo" ? "#fffbeb" : "#f3f4f6",
@@ -277,10 +277,8 @@ function App() {
           </table>
         )}
       </div>
-
     </div>
   );
 }
 
 export default App;
-
